@@ -21,8 +21,8 @@ def search():
     rating = request.form.get('rating')
     price = request.form.get('price')
     dist = request.form.get('dist')
-    lon = request.form.get('lon')
-    lat = request.form.get('lat')
+    lon = request.form.get('latitude')
+    lat = request.form.get('longitude')
     
     print("\n\n\n\n",name, rating, price, dist, lon, lat,"\n\n\n\n")
     
@@ -56,8 +56,8 @@ def insert():
     rating = request.form.get('rating')
     price = request.form.get('price')
     dist = request.form.get('dist')
-    lon = request.form.get('lon')
-    lat = request.form.get('lat')
+    lon = request.form.get('latitude')
+    lat = request.form.get('longitude')
     
     engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
