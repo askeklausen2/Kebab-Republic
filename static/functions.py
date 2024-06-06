@@ -16,7 +16,7 @@ def search_name(search: str, kebabs:list[dict]) -> list[dict]:
     regex = re.compile(search)
     kebab_matches = []
     for kebab in kebabs:
-        if re.match(regex, kebab["name"]): kebab_matches.append(kebab)
+        if re.search(regex, kebab["name"]): kebab_matches.append(kebab)
         if len(kebab_matches) > 10:
             return kebab_matches
     return kebab_matches

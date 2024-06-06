@@ -8,6 +8,14 @@ username = "askeklausen"
 password = "postgres"
 dbname = "askeklausen"
 
+def to_float(value):
+    try: return float(value)
+    except (ValueError, TypeError): return None
+
+def to_string(value):
+    try: return str(value)
+    except (ValueError, TypeError): return None
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -16,47 +24,46 @@ def index():
 
 @app.route("/search/", methods=['GET', 'POST'])
 def search():
-    name = request.form.get('name')
-    rating = request.form.get('rating')
-    price = request.form.get('price')
-    dist = request.form.get('dist')
-    address = request.form.get('address')
-    lon = request.form.get('latitude')
-    lat = request.form.get('longitude')
+    name = to_string(request.form.get('name'))
+    rating = to_float(request.form.get('rating'))
+    price = to_float(request.form.get('price'))
+    dist = to_float(request.form.get('dist'))
+    address = to_string(request.form.get('address'))
+    lon = to_float(request.form.get('latitude'))
+    lat = to_float(request.form.get('longitude'))
     
     engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
-    
+    search_kebab_table = Table('kebab', metadata, autoload_with=engine)
+    insert_kebab_table = Table('kebab', metadata,
+        Column('name', String),
+        Column('address', String),
+        Column('price', Float),
+        Column('rating', Float),
+        Column('latitude', Float),
+        Column('longitude', Float))
+
     if request.form.get('checkbox'):
-        values = {
-            'name': name,
-            'address': address,
-            'price': float(price),
-            'rating': float(rating),
-            'latitude': float(lat),
-            'longitude': float(lon)
-        }
-        
-        kebab_table = Table('kebab', metadata,
-                            Column('name', String),
-                            Column('address', String),
-                            Column('price', Float),
-                            Column('rating', Float),
-                            Column('latitude', Float),
-                            Column('longitude', Float))
-        
-        insert_stmt = insert(kebab_table).values(values)
-        
-        with engine.connect() as conn:
-            conn.execute(insert_stmt)
-            conn.commit()
+        if all((rating, price, dist, lon, lat)):
+            values = {
+                'name': name,
+                'address': address,
+                'price': price,
+                'rating': rating,
+                'latitude': lat,
+                'longitude': lon
+            }
+            
+            insert_stmt = insert(insert_kebab_table).values(values)
+            
+            with engine.connect() as conn:
+                conn.execute(insert_stmt)
+                conn.commit()
         return redirect('/')
     
     else:
-        kebab_table = Table('kebab', metadata, autoload_with=engine)
-
         with engine.connect() as conn:
-            select_stmt = select(kebab_table)
+            select_stmt = select(search_kebab_table)
             result = conn.execute(select_stmt)
             rows = result.fetchall()
 
