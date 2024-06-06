@@ -21,7 +21,7 @@ def search_name(search: str, kebabs:list[dict]) -> list[dict]:
             return kebab_matches
     return kebab_matches
 
-def search_rating(rating: int, kebabs:list[dict]) -> list[dict]:
+def search_rating(rating: float, kebabs:list[dict]) -> list[dict]:
     kebab_matches = []
     for kebab in kebabs:
         if kebab["rating"] >= rating: kebab_matches.append(kebab)
@@ -29,7 +29,7 @@ def search_rating(rating: int, kebabs:list[dict]) -> list[dict]:
             return kebab_matches
     return kebab_matches
 
-def search_price(price: int, kebabs:list[dict]) -> list[dict]:
+def search_price(price: float, kebabs:list[dict]) -> list[dict]:
     kebab_matches = []
     for kebab in kebabs:
         if kebab["price"] <= price: kebab_matches.append(kebab)
@@ -37,7 +37,7 @@ def search_price(price: int, kebabs:list[dict]) -> list[dict]:
             return kebab_matches
     return kebab_matches
 
-def search_closer(lat: int, lon: int, distance: int, kebabs:list[dict]) -> list[dict]:
+def search_closer(lat: float, lon: float, distance: float, kebabs:list[dict]) -> list[dict]:
     kebab_matches = []
     for kebab in kebabs:
         if haversine(lat, lon, kebab["latitude"], kebab["longitude"]) <= distance: 
@@ -47,7 +47,7 @@ def search_closer(lat: int, lon: int, distance: int, kebabs:list[dict]) -> list[
             return kebab_matches
     return kebab_matches
 
-def haversine(lat1, lon1, lat2, lon2) -> int:
+def haversine(lat1, lon1, lat2, lon2) -> float:
     R = 6371.0 # Radius of the Earth in kilometers.
     
     lat1_rad = math.radians(lat1)

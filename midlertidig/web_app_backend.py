@@ -1,7 +1,13 @@
-from functions import *
-from flask import Flask, redirect, url_for, render_template, request
+from static.functions import *
+from flask import Flask, redirect, render_template
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float
-from sqlalchemy.sql import insert, select
+from sqlalchemy.sql import select
+
+#before running the web app insert the needed info
+username = ""
+password = ""
+localhost = ""
+dbname = ""
 
 app = Flask(__name__)
 
@@ -14,8 +20,8 @@ def submit_coordinates():
     return None
 
 @app.route("/search/name=<name>/rating=<rating>/price=<price>/dist=<dist>/lon=<lon>/lat=<lat>/")
-def search(name: str = None, rating: int = None, price: int = None, dist: int = None, lon: int = None, lat: int = None):
-    engine = create_engine('postgresql+psycopg2://username:password@localhost/dbname')
+def search(name: str = None, rating: float = None, price: float = None, dist: float = None, lon: float = None, lat: float = None):
+    engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@" + localhost + "/" + dbname)
     metadata = MetaData(bind=engine)
 
     # Define the table
@@ -42,9 +48,9 @@ def search(name: str = None, rating: int = None, price: int = None, dist: int = 
     return html_from_list(data)
 
 @app.route("/insert/name=<name>/rating=<rating>/price=<price>/dist=<dist>/lon=<lon>/lat=<lat>/")
-def insert(name: str = None, rating: int = None, price: int = None, dist: int = None, lon: int = None, lat: int = None):
+def insert(name: str = None, rating: float = None, price: float = None, dist: float = None, lon: float = None, lat: float = None):
     #Connect to your database
-    engine = create_engine('postgresql+psycopg2://username:password@localhost/dbname')
+    engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@" + localhost + "/" + dbname)
     metadata = MetaData(bind=engine)
 
     # Define the table
