@@ -2,7 +2,6 @@ from static.functions import *
 from flask import Flask, redirect, render_template, request
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float, insert
 from sqlalchemy.sql import select
-import psycopg2
 
 #before running the web app insert the needed info
 username = "askeklausen"
@@ -21,6 +20,7 @@ def search():
     rating = request.form.get('rating')
     price = request.form.get('price')
     dist = request.form.get('dist')
+    address = request.form.get('address')
     lon = request.form.get('latitude')
     lat = request.form.get('longitude')
     
@@ -30,24 +30,12 @@ def search():
     if request.form.get('checkbox'):
         values = {
             'name': name,
-            'address': "DO LATER",
+            'address': address,
             'price': float(price),
             'rating': float(rating),
             'latitude': float(lat),
             'longitude': float(lon)
         }
-        
-        values_test = {
-            'name': 'Kebab House',
-            'address': '123 Main Street',
-            'price': 10.99,
-            'rating': 4.5,
-            'latitude': 40.7128,
-            'longitude': -74.0060
-        }
-
-        
-        print("\n\n\n\n",name, rating, price, lon, lat,"\n\n\n\n")
         
         kebab_table = Table('kebab', metadata,
                             Column('name', String),
@@ -57,14 +45,12 @@ def search():
                             Column('latitude', Float),
                             Column('longitude', Float))
         
-        insert_stmt = insert(kebab_table).values(values_test)
+        insert_stmt = insert(kebab_table).values(values)
         
         with engine.connect() as conn:
             conn.execute(insert_stmt)
             conn.commit()
         return redirect('/')
-    
-    
     
     else:
         kebab_table = Table('kebab', metadata, autoload_with=engine)
