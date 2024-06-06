@@ -15,9 +15,8 @@ app = Flask(__name__)
 def index():
     return render_template('home.html')
 
-@app.route("/search/", methods=['POST'])
+@app.route("/search/")
 def search():
-    print("hello")
     name = request.form.get('name')
     rating = request.form.get('rating')
     price = request.form.get('price')
@@ -25,7 +24,7 @@ def search():
     lon = request.form.get('lon')
     lat = request.form.get('lat')
     
-    print(name, rating, price, dist, lon, lat)
+    print("\n\n\n\n",name, rating, price, dist, lon, lat,"\n\n\n\n")
     
     engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
@@ -51,7 +50,7 @@ def search():
     if dist and lat and lon: data = search_closer(lat, lon, dist, data)
     return html_from_list(data)
 
-@app.route("/insert/", methods=['POST'])
+@app.route("/insert/")
 def insert():
     name = request.form.get('name')
     rating = request.form.get('rating')
