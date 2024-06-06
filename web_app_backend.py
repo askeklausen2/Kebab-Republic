@@ -2,6 +2,7 @@ from static.functions import *
 from flask import Flask, redirect, render_template, request
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float
 from sqlalchemy.sql import select
+import psycopg2
 
 #before running the web app insert the needed info
 username = "askeklausen"
@@ -23,27 +24,28 @@ def search():
     lon = request.form.get('lon')
     lat = request.form.get('lat')
     
-    engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
-    metadata = MetaData(bind=engine)
+    engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
+    metadata = MetaData()
 
     # Define the table
     kebab_table = Table('kebab', metadata, autoload_with=engine)
 
     # Select all rows
     with engine.connect() as conn:
-        select_stmt = select([kebab_table])
+        select_stmt = select(kebab_table)
         result = conn.execute(select_stmt)
         rows = result.fetchall()
     
-    for row in rows: print(row)
+    for row in rows:
+        print(row)
 
-    attributes = ['id', 'name', 'address', 'price', 'rating', 'latitude', 'longitude']
+    attributes = ['name', 'address', 'price', 'rating', 'latitude', 'longitude']
     data = []
     for row in rows:
         row_dict = {}
-        for attribute, index in enumerate(attributes):
+        for index, attribute in enumerate(attributes):
             row_dict[attribute] = row[index]
-        data.append[row_dict]
+        data.append(row_dict)
     
     if name: data = search_name(name, data)
     if rating: data = search_rating(rating, data)
@@ -62,11 +64,10 @@ def insert():
     
     #Connect to your database
     engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
-    metadata = MetaData(bind=engine)
+    metadata = MetaData()
 
     # Define the table
     kebab_table = Table('kebab', metadata,
-                        Column('id', Integer, primary_key=True),
                         Column('name', String),
                         Column('address', String),
                         Column('price', Float),
