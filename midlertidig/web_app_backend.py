@@ -4,10 +4,9 @@ from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, 
 from sqlalchemy.sql import select
 
 #before running the web app insert the needed info
-username = ""
-password = ""
-localhost = ""
-dbname = ""
+username = "askeklausen"
+password = "postgres"
+dbname = "askeklausen"
 
 app = Flask(__name__)
 
@@ -21,7 +20,7 @@ def submit_coordinates():
 
 @app.route("/search/name=<name>/rating=<rating>/price=<price>/dist=<dist>/lon=<lon>/lat=<lat>/")
 def search(name: str = None, rating: float = None, price: float = None, dist: float = None, lon: float = None, lat: float = None):
-    engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@" + localhost + "/" + dbname)
+    engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
     metadata = MetaData(bind=engine)
 
     # Define the table
