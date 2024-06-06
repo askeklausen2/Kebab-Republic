@@ -5,10 +5,10 @@ DROP TABLE kebab;
 CREATE TABLE kebab (
     name VARCHAR(50),
     address VARCHAR(100),
-    price VARCHAR(50),
-    rating VARCHAR(10),
-    longitude VARCHAR(50),
-    latitude VARCHAR(50)
+    price FLOAT(50),
+    rating FLOAT(10),
+    longitude FLOAT(50),
+    latitude FLOAT(50)
 );
 
 -- Import kebab data to database

@@ -49,7 +49,7 @@ def search(name: str = None, rating: float = None, price: float = None, dist: fl
 @app.route("/insert/name=<name>/rating=<rating>/price=<price>/dist=<dist>/lon=<lon>/lat=<lat>/")
 def insert(name: str = None, rating: float = None, price: float = None, dist: float = None, lon: float = None, lat: float = None):
     #Connect to your database
-    engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@" + localhost + "/" + dbname)
+    engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
     metadata = MetaData(bind=engine)
 
     # Define the table
