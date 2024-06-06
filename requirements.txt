@@ -1,0 +1,9 @@
+flask
+psycopg2
+readCSV
+querry
+visualize
+pandas
+pretty_html_table
+re
+math
