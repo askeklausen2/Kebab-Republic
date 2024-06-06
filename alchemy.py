@@ -32,3 +32,23 @@ with engine.connect() as conn:
     new_row = result.fetchone()
 
 print(new_row)
+
+# RETRIEVE DATA
+
+from sqlalchemy import create_engine, MetaData, Table, select
+
+# Connect to your database
+engine = create_engine('postgresql+psycopg2://username:password@localhost/dbname')
+metadata = MetaData(bind=engine)
+
+# Define the table
+kebab_table = Table('kebab', metadata, autoload_with=engine)
+
+# Select all rows
+with engine.connect() as conn:
+    select_stmt = select([kebab_table])
+    result = conn.execute(select_stmt)
+    rows = result.fetchall()
+
+for row in rows:
+    print(row)
