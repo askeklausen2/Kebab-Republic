@@ -20,20 +20,21 @@
         <label for="maxDistance">Maximum Distance (km):</label>
         <input type="number" id="maxDistance" name="maxDistance" min="0" required><br><br>
         
-        <button type="button" onclick="getLocation()">Get Location and Search</button>
+        <button type="button" onclick="getLocation('/search')">Get Location and Search</button>
+        <button type="button" onclick="getLocation('/insert')">Get Location and Insert</button>
     </form>
     <p id="status"></p>
 
     <script>
-        function getLocation() {
+        function getLocation(path) {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
+                navigator.geolocation.getCurrentPosition(position => showPosition(position, path), showError);
             } else {
                 document.getElementById("status").innerHTML = "Geolocation is not supported by this browser.";
             }
         }
 
-        function showPosition(position) {
+        function showPosition(position, path) {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
             const keyword = document.getElementById('keyword').value;
@@ -41,7 +42,7 @@
             const maxPrice = document.getElementById('maxPrice').value;
             const maxDistance = document.getElementById('maxDistance').value;
             
-            const url = `/search/lon=${longitude}/lat=${latitude}/search_key=${keyword}/min_rating=${minRating}/max_price=${maxPrice}/max_dist=${maxDistance}/`;
+            const url = `${path}/name=${keyword}/rating=${minRating}/price=${maxPrice}/dist=${maxDistance}/lon=${longitude}/lat=${latitude}`;
             window.location.href = url;
         }
 
