@@ -24,8 +24,6 @@ def search():
     lon = request.form.get('latitude')
     lat = request.form.get('longitude')
     
-    print("\n\n\n\n",name, rating, price, dist, lon, lat,"\n\n\n\n")
-    
     engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
 
@@ -77,8 +75,20 @@ def insert():
         'latitude': float(lat),
         'longitude': float(lon)
     }
+    
+    values1 = {
+        'name': "name",
+        'address': "DO LATER",
+        'price': 1.,
+        'rating': 1.,
+        'latitude': 1.,
+        'longitude': 1.
+    }
+    
+    print("\n\n\n\n",name, rating, price, lon, lat,"\n\n\n\n")
+    
     with engine.connect() as conn:
-        insert_stmt = kebab_table.insert().values(values).returning(*kebab_table.columns)
+        insert_stmt = kebab_table.insert().values(values1).returning(*kebab_table.columns)
         conn.execute(insert_stmt)
     return redirect('/')
 
