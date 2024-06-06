@@ -55,7 +55,6 @@ def insert():
     name = request.form.get('name')
     rating = request.form.get('rating')
     price = request.form.get('price')
-    dist = request.form.get('dist')
     lon = request.form.get('latitude')
     lat = request.form.get('longitude')
     
@@ -73,10 +72,10 @@ def insert():
     values = {
         'name': name,
         'address': "DO LATER",
-        'price': price,
-        'rating': rating,
-        'latitude': lat,
-        'longitude': lon
+        'price': float(price),
+        'rating': float(rating),
+        'latitude': float(lat),
+        'longitude': float(lon)
     }
     with engine.connect() as conn:
         insert_stmt = kebab_table.insert().values(values).returning(*kebab_table.columns)
