@@ -1,5 +1,5 @@
 from static.functions import *
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, request
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float
 from sqlalchemy.sql import select
 
@@ -18,8 +18,14 @@ def index():
 def submit_coordinates():
     return None
 
-@app.route("/search/name=<name>/rating=<rating>/price=<price>/dist=<dist>/lon=<lon>/lat=<lat>/")
-def search(name: str = None, rating: float = None, price: float = None, dist: float = None, lon: float = None, lat: float = None):
+@app.route("/search/")
+def search():
+    name = request.args.get('name')
+    rating = request.args.get('rating')
+    price = request.args.get('price')
+    dist = request.args.get('dist')
+    lon = request.args.get('lon')
+    lat = request.args.get('lat')
     engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
     metadata = MetaData(bind=engine)
 
@@ -46,8 +52,15 @@ def search(name: str = None, rating: float = None, price: float = None, dist: fl
     if dist and lat and lon: data = search_closer(lat, lon, dist, data)
     return html_from_list(data)
 
-@app.route("/insert/name=<name>/rating=<rating>/price=<price>/dist=<dist>/lon=<lon>/lat=<lat>/")
-def insert(name: str = None, rating: float = None, price: float = None, dist: float = None, lon: float = None, lat: float = None):
+@app.route("/search/")
+def search():
+    name = request.args.get('name')
+    rating = request.args.get('rating')
+    price = request.args.get('price')
+    dist = request.args.get('dist')
+    lon = request.args.get('lon')
+    lat = request.args.get('lat')
+    
     #Connect to your database
     engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
     metadata = MetaData(bind=engine)
@@ -76,7 +89,7 @@ def insert(name: str = None, rating: float = None, price: float = None, dist: fl
     with engine.connect() as conn:
         insert_stmt = kebab_table.insert().values(values).returning(*kebab_table.columns)
         conn.execute(insert_stmt)
-    return redirect("/")
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=True)
