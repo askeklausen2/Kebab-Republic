@@ -1,6 +1,6 @@
 from static.functions import *
 from flask import Flask, redirect, render_template, request
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float, insert
 from sqlalchemy.sql import select
 import psycopg2
 
@@ -28,15 +28,6 @@ def search():
     metadata = MetaData()
     
     if request.form.get('checkbox'):
-
-        kebab_table = Table('kebab', metadata,
-                            Column('name', String),
-                            Column('address', String),
-                            Column('price', Float),
-                            Column('rating', Float),
-                            Column('latitude', Float),
-                            Column('longitude', Float))
-
         values = {
             'name': name,
             'address': "DO LATER",
@@ -57,10 +48,22 @@ def search():
         
         print("\n\n\n\n",name, rating, price, lon, lat,"\n\n\n\n")
         
+        kebab_table = Table('kebab', metadata,
+                            Column('name', String),
+                            Column('address', String),
+                            Column('price', Float),
+                            Column('rating', Float),
+                            Column('latitude', Float),
+                            Column('longitude', Float))
+        
+        insert_stmt = insert(kebab_table).values(values1)
+        
         with engine.connect() as conn:
-            insert_stmt = kebab_table.insert().values(values1).returning(*kebab_table.columns)
             conn.execute(insert_stmt)
         return redirect('/')
+    
+    
+    
     else:
         kebab_table = Table('kebab', metadata, autoload_with=engine)
 
