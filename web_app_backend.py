@@ -15,7 +15,7 @@ app = Flask(__name__)
 def index():
     return render_template('home.html')
 
-@app.route("/search/")
+@app.route("/search/", methods=['GET', 'POST'])
 def search():
     name = request.form.get('name')
     rating = request.form.get('rating')
@@ -50,7 +50,7 @@ def search():
     if dist and lat and lon: data = search_closer(lat, lon, dist, data)
     return html_from_list(data)
 
-@app.route("/insert/")
+@app.route("/insert/", methods=['GET', 'POST'])
 def insert():
     name = request.form.get('name')
     rating = request.form.get('rating')
