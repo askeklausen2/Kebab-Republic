@@ -37,14 +37,15 @@ def search():
             'longitude': float(lon)
         }
         
-        values1 = {
-            'name': "name",
-            'address': "DO LATER",
-            'price': 1.,
-            'rating': 1.,
-            'latitude': 1.,
-            'longitude': 1.
+        values_test = {
+            'name': 'Kebab House',
+            'address': '123 Main Street',
+            'price': 10.99,
+            'rating': 4.5,
+            'latitude': 40.7128,
+            'longitude': -74.0060
         }
+
         
         print("\n\n\n\n",name, rating, price, lon, lat,"\n\n\n\n")
         
@@ -56,10 +57,11 @@ def search():
                             Column('latitude', Float),
                             Column('longitude', Float))
         
-        insert_stmt = insert(kebab_table).values(values1)
+        insert_stmt = insert(kebab_table).values(values_test)
         
         with engine.connect() as conn:
             conn.execute(insert_stmt)
+            conn.commit()
         return redirect('/')
     
     
