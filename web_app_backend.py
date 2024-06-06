@@ -63,7 +63,7 @@ def insert():
     lat = request.form.get('lat')
     
     #Connect to your database
-    engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
+    engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
 
     # Define the table
