@@ -24,20 +24,17 @@ def search():
     lon = request.form.get('lon')
     lat = request.form.get('lat')
     
+    print(name, rating, price, dist, lon, lat)
+    
     engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
 
-    # Define the table
     kebab_table = Table('kebab', metadata, autoload_with=engine)
 
-    # Select all rows
     with engine.connect() as conn:
         select_stmt = select(kebab_table)
         result = conn.execute(select_stmt)
         rows = result.fetchall()
-    
-    for row in rows:
-        print(row)
 
     attributes = ['name', 'address', 'price', 'rating', 'latitude', 'longitude']
     data = []
