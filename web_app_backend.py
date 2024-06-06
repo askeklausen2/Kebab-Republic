@@ -17,12 +17,12 @@ def index():
 
 @app.route("/search/")
 def search():
-    name = request.form.get('name')
-    rating = request.form.get('rating')
-    price = request.form.get('price')
-    dist = request.form.get('dist')
-    lon = request.form.get('lon')
-    lat = request.form.get('lat')
+    name = request.args.get('name')
+    rating = request.args.get('rating')
+    price = request.args.get('price')
+    dist = request.args.get('dist')
+    lon = request.args.get('lon')
+    lat = request.args.get('lat')
     
     print(name, rating, price, dist, lon, lat)
     
@@ -52,18 +52,16 @@ def search():
 
 @app.route("/insert/")
 def insert():
-    name = request.form.get('name')
-    rating = request.form.get('rating')
-    price = request.form.get('price')
-    dist = request.form.get('dist')
-    lon = request.form.get('lon')
-    lat = request.form.get('lat')
+    name = request.args.get('name')
+    rating = request.args.get('rating')
+    price = request.args.get('price')
+    dist = request.args.get('dist')
+    lon = request.args.get('lon')
+    lat = request.args.get('lat')
     
-    #Connect to your database
     engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
 
-    # Define the table
     kebab_table = Table('kebab', metadata,
                         Column('name', String),
                         Column('address', String),
@@ -72,7 +70,6 @@ def insert():
                         Column('latitude', Float),
                         Column('longitude', Float))
 
-    # Insert values
     values = {
         'name': name,
         'address': "DO LATER",
@@ -81,8 +78,7 @@ def insert():
         'latitude': lat,
         'longitude': lon
     }
-
-    # Insert the new row and return the inserted data
+    
     with engine.connect() as conn:
         insert_stmt = kebab_table.insert().values(values).returning(*kebab_table.columns)
         conn.execute(insert_stmt)
