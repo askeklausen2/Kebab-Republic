@@ -26,71 +26,62 @@ def search():
     
     engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
-
-    kebab_table = Table('kebab', metadata, autoload_with=engine)
-
-    with engine.connect() as conn:
-        select_stmt = select(kebab_table)
-        result = conn.execute(select_stmt)
-        rows = result.fetchall()
-
-    attributes = ['name', 'address', 'price', 'rating', 'latitude', 'longitude']
-    data = []
-    for row in rows:
-        row_dict = {}
-        for index, attribute in enumerate(attributes):
-            row_dict[attribute] = row[index]
-        data.append(row_dict)
     
-    if name: data = search_name(name, data)
-    if rating: data = search_rating(rating, data)
-    if price: data = search_price(price, data)
-    if dist and lat and lon: data = search_closer(lat, lon, dist, data)
-    return html_from_list(data)
+    if request.form.get('checkbox'):
 
-@app.route("/insert/", methods=['GET', 'POST'])
-def insert():
-    name = request.form.get('name')
-    rating = request.form.get('rating')
-    price = request.form.get('price')
-    lon = request.form.get('latitude')
-    lat = request.form.get('longitude')
-    
-    engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
-    metadata = MetaData()
+        kebab_table = Table('kebab', metadata,
+                            Column('name', String),
+                            Column('address', String),
+                            Column('price', Float),
+                            Column('rating', Float),
+                            Column('latitude', Float),
+                            Column('longitude', Float))
 
-    kebab_table = Table('kebab', metadata,
-                        Column('name', String),
-                        Column('address', String),
-                        Column('price', Float),
-                        Column('rating', Float),
-                        Column('latitude', Float),
-                        Column('longitude', Float))
+        values = {
+            'name': name,
+            'address': "DO LATER",
+            'price': float(price),
+            'rating': float(rating),
+            'latitude': float(lat),
+            'longitude': float(lon)
+        }
+        
+        values1 = {
+            'name': "name",
+            'address': "DO LATER",
+            'price': 1.,
+            'rating': 1.,
+            'latitude': 1.,
+            'longitude': 1.
+        }
+        
+        print("\n\n\n\n",name, rating, price, lon, lat,"\n\n\n\n")
+        
+        with engine.connect() as conn:
+            insert_stmt = kebab_table.insert().values(values1).returning(*kebab_table.columns)
+            conn.execute(insert_stmt)
+        return redirect('/')
+    else:
+        kebab_table = Table('kebab', metadata, autoload_with=engine)
 
-    values = {
-        'name': name,
-        'address': "DO LATER",
-        'price': float(price),
-        'rating': float(rating),
-        'latitude': float(lat),
-        'longitude': float(lon)
-    }
-    
-    values1 = {
-        'name': "name",
-        'address': "DO LATER",
-        'price': 1.,
-        'rating': 1.,
-        'latitude': 1.,
-        'longitude': 1.
-    }
-    
-    print("\n\n\n\n",name, rating, price, lon, lat,"\n\n\n\n")
-    
-    with engine.connect() as conn:
-        insert_stmt = kebab_table.insert().values(values1).returning(*kebab_table.columns)
-        conn.execute(insert_stmt)
-    return redirect('/')
+        with engine.connect() as conn:
+            select_stmt = select(kebab_table)
+            result = conn.execute(select_stmt)
+            rows = result.fetchall()
+
+        attributes = ['name', 'address', 'price', 'rating', 'latitude', 'longitude']
+        data = []
+        for row in rows:
+            row_dict = {}
+            for index, attribute in enumerate(attributes):
+                row_dict[attribute] = row[index]
+            data.append(row_dict)
+        
+        if name: data = search_name(name, data)
+        if rating: data = search_rating(rating, data)
+        if price: data = search_price(price, data)
+        if dist and lat and lon: data = search_closer(lat, lon, dist, data)
+        return html_from_list(data)
 
 if __name__ == '__main__':
     app.run(debug=True)
