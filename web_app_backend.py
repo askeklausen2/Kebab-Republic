@@ -16,7 +16,6 @@ def index():
 
 @app.route("/search/")
 def search():
-    print("search call")
     name = request.form.get('name')
     rating = request.form.get('rating')
     price = request.form.get('price')
@@ -35,6 +34,8 @@ def search():
         select_stmt = select([kebab_table])
         result = conn.execute(select_stmt)
         rows = result.fetchall()
+    
+    for row in rows: print(row)
 
     attributes = ['id', 'name', 'address', 'price', 'rating', 'latitude', 'longitude']
     data = []
@@ -52,7 +53,6 @@ def search():
 
 @app.route("/insert/")
 def insert():
-    print("insert call")
     name = request.form.get('name')
     rating = request.form.get('rating')
     price = request.form.get('price')
