@@ -14,19 +14,15 @@ app = Flask(__name__)
 def index():
     return render_template('home.html')
 
-@app.route('/submit-coordinates', methods=['POST'])
-def submit_coordinates():
-    return None
-
 @app.route("/search/")
 def search():
-    name = request.args.get('name')
-    rating = request.args.get('rating')
-    price = request.args.get('price')
-    dist = request.args.get('dist')
-    lon = request.args.get('lon')
-    lat = request.args.get('lat')
-    
+    print("search call")
+    name = request.form.get('name')
+    rating = request.form.get('rating')
+    price = request.form.get('price')
+    dist = request.form.get('dist')
+    lon = request.form.get('lon')
+    lat = request.form.get('lat')
     
     engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
     metadata = MetaData(bind=engine)
@@ -56,12 +52,13 @@ def search():
 
 @app.route("/insert/")
 def insert():
-    name = request.args.get('name')
-    rating = request.args.get('rating')
-    price = request.args.get('price')
-    dist = request.args.get('dist')
-    lon = request.args.get('lon')
-    lat = request.args.get('lat')
+    print("insert call")
+    name = request.form.get('name')
+    rating = request.form.get('rating')
+    price = request.form.get('price')
+    dist = request.form.get('dist')
+    lon = request.form.get('lon')
+    lat = request.form.get('lat')
     
     #Connect to your database
     engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
