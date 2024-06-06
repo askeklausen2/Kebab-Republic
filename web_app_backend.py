@@ -15,14 +15,15 @@ app = Flask(__name__)
 def index():
     return render_template('home.html')
 
-@app.route("/search/")
+@app.route("/search/", methods=['POST'])
 def search():
-    name = request.args.get('name')
-    rating = request.args.get('rating')
-    price = request.args.get('price')
-    dist = request.args.get('dist')
-    lon = request.args.get('lon')
-    lat = request.args.get('lat')
+    print("hello")
+    name = request.form.get('name')
+    rating = request.form.get('rating')
+    price = request.form.get('price')
+    dist = request.form.get('dist')
+    lon = request.form.get('lon')
+    lat = request.form.get('lat')
     
     print(name, rating, price, dist, lon, lat)
     
@@ -50,14 +51,14 @@ def search():
     if dist and lat and lon: data = search_closer(lat, lon, dist, data)
     return html_from_list(data)
 
-@app.route("/insert/")
+@app.route("/insert/", methods=['POST'])
 def insert():
-    name = request.args.get('name')
-    rating = request.args.get('rating')
-    price = request.args.get('price')
-    dist = request.args.get('dist')
-    lon = request.args.get('lon')
-    lat = request.args.get('lat')
+    name = request.form.get('name')
+    rating = request.form.get('rating')
+    price = request.form.get('price')
+    dist = request.form.get('dist')
+    lon = request.form.get('lon')
+    lat = request.form.get('lat')
     
     engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
@@ -78,7 +79,6 @@ def insert():
         'latitude': lat,
         'longitude': lon
     }
-    
     with engine.connect() as conn:
         insert_stmt = kebab_table.insert().values(values).returning(*kebab_table.columns)
         conn.execute(insert_stmt)
