@@ -26,6 +26,8 @@ def search():
     dist = request.args.get('dist')
     lon = request.args.get('lon')
     lat = request.args.get('lat')
+    
+    
     engine = create_engine("postgresql+psycopg2://" + username + ":" + password + "@localhost/" + dbname)
     metadata = MetaData(bind=engine)
 
@@ -52,8 +54,8 @@ def search():
     if dist and lat and lon: data = search_closer(lat, lon, dist, data)
     return html_from_list(data)
 
-@app.route("/search/")
-def search():
+@app.route("/insert/")
+def insert():
     name = request.args.get('name')
     rating = request.args.get('rating')
     price = request.args.get('price')
