@@ -34,17 +34,16 @@ def search():
     
     engine = create_engine(f"postgresql://{username}:{password}@localhost/{dbname}")
     metadata = MetaData()
-    search_kebab_table = Table('kebab', metadata, autoload_with=engine)
-    insert_kebab_table = Table('kebab', metadata,
-        Column('name', String),
-        Column('address', String),
-        Column('price', Float),
-        Column('rating', Float),
-        Column('latitude', Float),
-        Column('longitude', Float))
 
     if request.form.get('checkbox'):
         if all((name, address, price, rating, lon, lat)):
+            insert_kebab_table = Table('kebab', metadata,
+                    Column('name', String),
+                    Column('address', String),
+                    Column('price', Float),
+                    Column('rating', Float),
+                    Column('latitude', Float),
+                    Column('longitude', Float))
             values = {
                 'name': name,
                 'address': address,
@@ -63,6 +62,7 @@ def search():
     
     else:
         with engine.connect() as conn:
+            search_kebab_table = Table('kebab', metadata, autoload_with=engine)
             select_stmt = select(search_kebab_table)
             result = conn.execute(select_stmt)
             rows = result.fetchall()
