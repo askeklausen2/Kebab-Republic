@@ -1,9 +1,6 @@
-flask
-readCSV
-querry
-visualize
-pandas
-pretty_html_table
-re
-math
-sqlalchemy
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+pandas==2.1.1
+pretty_html_table==0.9.16
+SQLAlchemy==2.0.30
+psycopg2-binary==2.9.9
