@@ -44,7 +44,7 @@ def search():
         Column('longitude', Float))
 
     if request.form.get('checkbox'):
-        if all((rating, price, dist, lon, lat)):
+        if all((name, address, price, rating, lon, lat)):
             values = {
                 'name': name,
                 'address': address,
